@@ -201,8 +201,7 @@ static int lnvm_check_io (struct nvm_io_cmd *cmd)
     if (cmd->status.total_pgs > 64 || cmd->status.total_pgs == 0){
         cmd->status.status = NVM_IO_FAIL;
 		
-		printf("[DEBUG]:NVM_IO_FAIL NVME_INVALID_FORMAT \n");
-		log_err("[DEBUG]:NVM_IO_FAIL NVME_INVALID_FORMAT \n");
+		printf("[DEBUG]:lnvm_check_io failed! \n");
         return cmd->status.nvme_status = NVME_INVALID_FORMAT;
     }
 
@@ -229,6 +228,7 @@ static int lnvm_submit_io (struct nvm_io_cmd *cmd)
         /* if true, page not processed yet */
         if ( cmd->status.pg_map[i / 8] & (1 << (i % 8)) ) {
             if (lnvm_check_pg_io(cmd, i)) {
+				printf("[DEBUG]:NVME_INVALID_FORMAT \n");
                 cmd->status.status = NVM_IO_FAIL;
                 cmd->status.nvme_status = NVME_INVALID_FORMAT;
                 return -1;
