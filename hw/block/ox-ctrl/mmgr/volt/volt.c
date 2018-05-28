@@ -391,9 +391,16 @@ static void volt_nand_dma (void *paddr, void *buf, size_t sz, uint8_t dir)
 {
     switch (dir) {
         case VOLT_DMA_READ:
+			if(core.debug)
+				printf("[DEBUG]: read size=%d \n",pg_size);
+			
             memcpy(buf, paddr, sz);
             break;
         case VOLT_DMA_WRITE:
+			if(core.debug){
+				printf("[DEBUG]: write size=%d \n",pg_size);
+				printf("[DEBUG]: write %s \n",((char*)paddr)+16384);
+			}
             memcpy(paddr, buf, sz);
             break;
     }
@@ -415,13 +422,10 @@ static int volt_process_io (struct nvm_mmgr_io_cmd *cmd)
     switch (cmd->cmdtype) {
         case MMGR_READ_PG:
             dir = VOLT_DMA_READ;
-			if(core.debug)
-				printf("[DEBUG]: read size=%d \n",pg_size);
+			
         case MMGR_WRITE_PG:
             volt_nand_dma (blk->pages[cmd->ppa.g.pg].data,
                                                 dma->virt_addr, pg_size, dir);
-			if(core.debug)
-				printf("[DEBUG]: write size=%d \n",pg_size);
 			break;
         case MMGR_ERASE_BLK:
             if (blk->life > 0) {
