@@ -391,8 +391,15 @@ static void volt_nand_dma (void *paddr, void *buf, size_t sz, uint8_t dir)
 {
     switch (dir) {
         case VOLT_DMA_READ:
-			if(core.debug)
+			if(core.debug){
 				printf("[DEBUG]: read size=%ld \n",sz);
+				int i=0;
+				printf("[DEBUG]: read data %s \n",(char*)paddr);
+		        printf("[DEBUG]: read oob ");
+				for(i=16384; i<16448;i++)
+					printf(" 0x%0x",(unsigned char)(*((char*)paddr+i)));
+				printf("\n");
+			}
 			
             memcpy(buf, paddr, sz);
             break;
