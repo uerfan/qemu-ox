@@ -156,6 +156,8 @@ static int lnvm_check_pg_io (struct nvm_io_cmd *cmd, uint8_t index)
                     ppa->g.pg != mio->ppa.g.pg   ||
                     ppa->g.pl != mio->ppa.g.pl   ||
                     ppa->g.sec != mio->ppa.g.sec + c) {
+                printf("[DEBUG] ppa->g.ch=%d lun=%d blk=%d pg=%d pl=%d sec=%d \n",ppa->g.ch,ppa->g.lun,ppa->g.blk,ppa->g.pg,ppa->g.pl,ppa->g.sec);
+				printf("[DEBUG] mio->ppa.g.ch=%d lun=%d blk=%d pg=%d pl=%d sec=%d \n",mio->ppa.g.ch,mio->ppa.g.lun,mio->ppa.g.blk,mio->ppa.g.pg,mio->ppa.g.pl,mio->ppa.g.sec)
                 printf("[DEBUG]:ERROR ftl_lnvm: Wrong write ppa sequence. \n");
                 log_err ("[ERROR ftl_lnvm: Wrong write ppa sequence. "
                                                          "Aborting IO cmd.\n");
