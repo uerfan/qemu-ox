@@ -394,7 +394,7 @@ static void volt_nand_dma (void *paddr, void *buf, size_t sz, uint8_t dir)
 			if(core.debug){
 				printf("[DEBUG]: read size=%ld \n",sz);
 				int i=0;
-				printf("[DEBUG]: read data %s \n",(char*)paddr);
+				//printf("[DEBUG]: read data %s \n",(char*)paddr);
 		        printf("[DEBUG]: read oob ");
 				for(i=16384; i<16448;i++)
 					printf(" 0x%0x",(unsigned char)(*((char*)paddr+i)));
@@ -407,7 +407,7 @@ static void volt_nand_dma (void *paddr, void *buf, size_t sz, uint8_t dir)
 			if(core.debug){
 				printf("[DEBUG]: write size=%ld \n",sz);
 				int i=0;
-				printf("[DEBUG]: write data %s \n",(char*)buf);
+				//printf("[DEBUG]: write data %s \n",(char*)buf);
 		        printf("[DEBUG]: write oob ");
 				for(i=16384; i<16448;i++)
 					printf(" 0x%0x",(unsigned char)(*((char*)buf+i)));
