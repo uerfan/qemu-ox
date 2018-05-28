@@ -399,7 +399,7 @@ static void volt_nand_dma (void *paddr, void *buf, size_t sz, uint8_t dir)
         case VOLT_DMA_WRITE:
 			if(core.debug){
 				printf("[DEBUG]: write size=%ld \n",sz);
-				printf("[DEBUG]: write %s \n",((char*)paddr)+16384);
+				printf("[DEBUG]: write 0x%x \n",((char*)paddr)+16384);
 			}
             memcpy(paddr, buf, sz);
             break;
