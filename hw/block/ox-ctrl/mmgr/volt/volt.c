@@ -400,8 +400,11 @@ static void volt_nand_dma (void *paddr, void *buf, size_t sz, uint8_t dir)
 			if(core.debug){
 				printf("[DEBUG]: write size=%ld \n",sz);
 				int i=0;
+				printf("[DEBUG]: write data %s \n",paddr);
+		        printf("[DEBUG]: write oob ");
 				for(i=16384; i<16448;i++)
-					printf("[DEBUG]: write 0x%0x \n",(unsigned char)(*((char*)paddr+i)));
+					printf(" 0x%0x",(unsigned char)(*((char*)paddr+i)));
+				printf("\n");
 			}
             memcpy(paddr, buf, sz);
             break;
