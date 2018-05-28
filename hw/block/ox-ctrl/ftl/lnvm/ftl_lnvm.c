@@ -156,6 +156,7 @@ static int lnvm_check_pg_io (struct nvm_io_cmd *cmd, uint8_t index)
                     ppa->g.pg != mio->ppa.g.pg   ||
                     ppa->g.pl != mio->ppa.g.pl   ||
                     ppa->g.sec != mio->ppa.g.sec + c) {
+                printf("[DEBUG]:ERROR ftl_lnvm: Wrong write ppa sequence. \n");
                 log_err ("[ERROR ftl_lnvm: Wrong write ppa sequence. "
                                                          "Aborting IO cmd.\n");
                 return -1;
@@ -163,8 +164,11 @@ static int lnvm_check_pg_io (struct nvm_io_cmd *cmd, uint8_t index)
         }
     }
 
-    if (cmd->sec_sz != LNVM_SECSZ)
-        return -1;
+    if (cmd->sec_sz != LNVM_SECSZ){
+		printf("[DEBUG]:sec_sz != LNVM_SECSZ \n");
+		return -1;
+    }
+        
 
     /* Build the MMGR command on page granularity, but PRP for empty sectors
      * are kept 0. The empty PRPs are checked in the MMGR for DMA. */
@@ -228,7 +232,7 @@ static int lnvm_submit_io (struct nvm_io_cmd *cmd)
         /* if true, page not processed yet */
         if ( cmd->status.pg_map[i / 8] & (1 << (i % 8)) ) {
             if (lnvm_check_pg_io(cmd, i)) {
-				printf("[DEBUG]:NVME_INVALID_FORMAT \n");
+				printf("[DEBUG]: %d NVME_INVALID_FORMAT \n",i);
                 cmd->status.status = NVM_IO_FAIL;
                 cmd->status.nvme_status = NVME_INVALID_FORMAT;
                 return -1;
