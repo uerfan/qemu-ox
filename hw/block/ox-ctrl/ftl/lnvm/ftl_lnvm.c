@@ -200,6 +200,9 @@ static int lnvm_check_io (struct nvm_io_cmd *cmd)
 
     if (cmd->status.total_pgs > 64 || cmd->status.total_pgs == 0){
         cmd->status.status = NVM_IO_FAIL;
+		if(core.debug){
+			printf("[DEBUG]:NVM_IO_FAIL NVME_INVALID_FORMAT \n");
+		}
         return cmd->status.nvme_status = NVME_INVALID_FORMAT;
     }
 

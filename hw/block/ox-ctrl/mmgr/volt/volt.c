@@ -415,11 +415,13 @@ static int volt_process_io (struct nvm_mmgr_io_cmd *cmd)
     switch (cmd->cmdtype) {
         case MMGR_READ_PG:
             dir = VOLT_DMA_READ;
-			printf("[DEBUG]: read size=%d \n",pg_size);
+			if(core.debug)
+				printf("[DEBUG]: read size=%d \n",pg_size);
         case MMGR_WRITE_PG:
             volt_nand_dma (blk->pages[cmd->ppa.g.pg].data,
                                                 dma->virt_addr, pg_size, dir);
-			printf("[DEBUG]: write size=%d \n",pg_size);
+			if(core.debug)
+				printf("[DEBUG]: write size=%d \n",pg_size);
 			break;
         case MMGR_ERASE_BLK:
             if (blk->life > 0) {
@@ -430,8 +432,8 @@ static int volt_process_io (struct nvm_mmgr_io_cmd *cmd)
             }
             for (pg_i = 0; pg_i < volt_mmgr.geometry->pg_per_blk; pg_i++)
                 memset(blk->pages[pg_i].data, 0xff, pg_size);
-
-			printf("[DEBUG]: erases %d pages \n",volt_mmgr.geometry->pg_per_blk);
+			if(core.debug)
+				printf("[DEBUG]: erases %d pages \n",volt_mmgr.geometry->pg_per_blk);
             break;
         default:
             dma->status = 0;
@@ -454,8 +456,8 @@ static void volt_execute_io (struct ox_mq_entry *req)
     int ret, retry;
 
     ret = volt_process_io(cmd);
-
-	printf("[DEBUG] volt_execute_io ret=%d \n",ret);
+	if(core.debug)
+		printf("[DEBUG] volt_execute_io ret=%d \n",ret);
 	
     if (ret && core.debug) {
         log_err ("[volt: Cmd 0x%x NOT completed. (%d/%d/%d/%d/%d)]\n",
