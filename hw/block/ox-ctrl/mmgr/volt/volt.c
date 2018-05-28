@@ -392,13 +392,13 @@ static void volt_nand_dma (void *paddr, void *buf, size_t sz, uint8_t dir)
     switch (dir) {
         case VOLT_DMA_READ:
 			if(core.debug)
-				printf("[DEBUG]: read size=%d \n",sz);
+				printf("[DEBUG]: read size=%ld \n",sz);
 			
             memcpy(buf, paddr, sz);
             break;
         case VOLT_DMA_WRITE:
 			if(core.debug){
-				printf("[DEBUG]: write size=%d \n",sz);
+				printf("[DEBUG]: write size=%ld \n",sz);
 				printf("[DEBUG]: write %s \n",((char*)paddr)+16384);
 			}
             memcpy(paddr, buf, sz);
