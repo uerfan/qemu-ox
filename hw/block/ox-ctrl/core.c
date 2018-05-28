@@ -454,7 +454,7 @@ int nvm_submit_ftl (struct nvm_io_cmd *cmd)
             usleep (NVM_QUEUE_RETRY_SLEEP);
         }
         else if (core.debug) {
-			printf("[DEBUG] retry:%d",retry);
+			printf("[DEBUG] retry:%d \n",retry);
             printf(" CMD cid: %lu, type: 0x%x submitted to FTL. "
                                "FTL queue: %d\n", cmd->cid, cmd->cmdtype, qid);
             if (core.lnvm) {

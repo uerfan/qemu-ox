@@ -219,7 +219,10 @@ static int lnvm_submit_io (struct nvm_io_cmd *cmd)
 
     int ret, i;
     ret = lnvm_check_io(cmd);
-    if (ret) return ret;
+    if (ret) {
+		printf("[DEBUG]:LNVM_CHECK_IO FAILED!\n");
+		return ret;
+    }
 
     for (i = 0; i < cmd->status.total_pgs; i++) {
 
