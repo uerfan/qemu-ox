@@ -456,7 +456,23 @@ static int volt_process_io (struct nvm_mmgr_io_cmd *cmd)
 
 		#ifdef USE_ECC
 			sector_data = (uint8_t*)(dma->virt_addr);
-			sector_oob = sector_data + volt_mmgr.geometry->pg_size;
+			
+            int i;
+            int is_erased = 0;
+            for (i = 0; i != volt_mmgr.geometry->pg_size; ++i){
+                if (page_buffer[i] != 0xff)
+                {
+                    is_erased = 0;
+                    break;
+                }
+            }
+            if(is_erased){
+                ret = 1;
+                dma->status = 1;
+                goto THIS_RET;
+            }
+
+            sector_oob = sector_data + volt_mmgr.geometry->pg_size;
             if(core.debug){
                 //printf("[DEBUG] sizeof sector_data[10] = %ld \n",sizeof(sector_data[10]));
                // sector_data[10] = (sector_data[10] & 0xF0) | ((~(sector_data[10] & 0x0F)) & 0x0F);
