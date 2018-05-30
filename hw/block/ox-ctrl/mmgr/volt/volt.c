@@ -28,6 +28,8 @@ extern struct core_struct   core;
 
 static const char *volt_disk = "volt_disk";
 
+struct bch_control *bch; 
+
 static int volt_start_prp_map(void)
 {
     int i;
@@ -441,7 +443,6 @@ static int volt_process_io (struct nvm_mmgr_io_cmd *cmd)
 	
 	
 #ifdef USE_ECC
-    struct bch_control *bch = init_bch(BCH_M, BCH_T, 0);
     uint8_t *sector_data;
     uint8_t *sector_oob;
 #endif	
@@ -501,9 +502,6 @@ static int volt_process_io (struct nvm_mmgr_io_cmd *cmd)
     }
     dma->status = 1;
 THIS_RET:
-#ifdef USE_ECC
-	free_bch(bch);
-#endif
 	return ret;
     /* DEBUG: Force timeout for testing */
     /*
@@ -939,7 +937,7 @@ int mmgr_volt_init(void)
     volt_mmgr.name     = "VOLT";
     volt_mmgr.ops      = &volt_ops;
     volt_mmgr.geometry = &volt_geo;
-
+    bch = init_bch(BCH_M, BCH_T, 0);
     ret = volt_init();
     if(ret) {
         log_err(" [volt: Not possible to start VOLT.]\n");
