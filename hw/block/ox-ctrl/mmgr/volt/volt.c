@@ -498,7 +498,7 @@ static int volt_process_io (struct nvm_mmgr_io_cmd *cmd)
 		#ifdef USE_ECC
 			sector_data = (uint8_t*)(blk->pages[cmd->ppa.g.pg].data);
 			sector_oob = sector_data + volt_mmgr.geometry->pg_size;
-            //memset(sector_oob,0,OOB_ECC_LEN);
+            memset(sector_oob,0,OOB_ECC_LEN);
             encode_bch(bch, sector_data, K_SIZE, sector_oob);
             if(core.debug){
                 printf("[DEBUG] encode_bch.\n");
