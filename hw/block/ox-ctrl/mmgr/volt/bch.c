@@ -77,7 +77,7 @@
 #define ARRAY_SIZE(x) (sizeof(x) / sizeof(x[0]))
 #define cpu_to_be32(x) htonl(x)
 
-unsigned fls(uint32_t x)
+unsigned int fls(uint32_t x)
 {
 	unsigned i;
 	for (i = 32; i != 0; --i)
