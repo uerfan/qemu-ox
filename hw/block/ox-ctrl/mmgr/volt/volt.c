@@ -460,7 +460,7 @@ static int volt_process_io (struct nvm_mmgr_io_cmd *cmd)
             if(core.debug){
                 sector_data[10] = ~sector_data[10];
             }
-			decode_ret = decode_bch(bch,sector_data,K_SIZE,sector_oob,sector_oob,NULL,errloc);
+			decode_ret = decode_bch(bch,sector_data,K_SIZE,sector_oob,NULL,NULL,errloc);
 			if(core.debug){
                 printf("[DEBUG]decode_ret: %d.\n",decode_ret);
             }
