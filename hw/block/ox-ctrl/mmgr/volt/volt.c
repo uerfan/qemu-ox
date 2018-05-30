@@ -11,11 +11,11 @@
 #define USE_ECC
 
 
-#define BCH_T 4
+#define BCH_T 16
 #define BCH_M 13
 #define K_SIZE 512 
 #define OOB_ECC_OFS 0
-#define OOB_ECC_LEN 8
+#define OOB_ECC_LEN 26
 
 static u_atomic_t       nextprp[VOLT_CHIP_COUNT];
 static pthread_mutex_t  prpmap_mutex[VOLT_CHIP_COUNT];
@@ -461,6 +461,7 @@ static int volt_process_io (struct nvm_mmgr_io_cmd *cmd)
                 //printf("[DEBUG] sizeof sector_data[10] = %ld \n",sizeof(sector_data[10]));
                // sector_data[10] = (sector_data[10] & 0xF0) | ((~(sector_data[10] & 0x0F)) & 0x0F);
             }
+            memset(errloc,0,BCH_T*sizeof(int));
 			decode_ret = decode_bch(bch,sector_data,K_SIZE,sector_oob,NULL,NULL,errloc);
 			if(core.debug){
                 printf("[DEBUG] decode_ret: %d.\n",decode_ret);
