@@ -435,7 +435,7 @@ static int volt_process_io (struct nvm_mmgr_io_cmd *cmd)
     struct volt_dma *dma = (struct volt_dma *) cmd->rsvd;
     uint32_t pg_size = volt_mmgr.geometry->pg_size +
             (volt_mmgr.geometry->sec_oob_sz * volt_mmgr.geometry->sec_per_pg);
-    int pg_i,i;
+    int pg_i;
 	int ret = 0;
     blk = volt_get_block(cmd->ppa);
 	
@@ -449,7 +449,7 @@ static int volt_process_io (struct nvm_mmgr_io_cmd *cmd)
 			volt_nand_dma (blk->pages[cmd->ppa.g.pg].data,dma->virt_addr, pg_size, dir);
 
 		#ifdef USE_ECC
-			sector_data =  = dma->virt_addr;
+			sector_data = dma->virt_addr;
 			unsigned int errloc[BCH_T];
 			int decode_ret=0;
 			sector_oob= dma->virt_addr + volt_mmgr.geometry->pg_size;
@@ -472,7 +472,7 @@ static int volt_process_io (struct nvm_mmgr_io_cmd *cmd)
         case MMGR_WRITE_PG:
 			dir = VOLT_DMA_WRITE;
 		#ifdef USE_ECC
-			sector_data =  = dma->virt_addr;
+			sector_data = dma->virt_addr;
 			sector_oob = blk->pages[cmd->ppa.g.pg].data+volt_mmgr.geometry->pg_size;
 			encode_bch(bch, sector_data, K_SIZE, sector_oob);
 		#endif
