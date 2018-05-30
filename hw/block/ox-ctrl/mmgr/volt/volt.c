@@ -8,7 +8,7 @@
 #include "hw/block/ox-ctrl/include/ox-mq.h"
 #include "bch.h"
 
-//#define USE_ECC 0
+#define USE_ECC
 
 
 #define BCH_T 16
@@ -445,7 +445,7 @@ static int volt_process_io (struct nvm_mmgr_io_cmd *cmd)
     uint8_t *sector_data;
     uint8_t *sector_oob;
 #endif	
-    
+
     switch (cmd->cmdtype) {
         case MMGR_READ_PG:
             dir = VOLT_DMA_READ;
