@@ -455,9 +455,9 @@ static int volt_process_io (struct nvm_mmgr_io_cmd *cmd)
 			volt_nand_dma (blk->pages[cmd->ppa.g.pg].data,dma->virt_addr, pg_size, dir);
 
 		#ifdef USE_ECC
-			sector_data = dma->virt_addr;
-			sector_oob= dma->virt_addr + volt_mmgr.geometry->pg_size;
-			decode_ret=decode_bch(bch,sector_data,K_SIZE,sector_oob,NULL,NULL,errloc);
+			sector_data = blk->pages[cmd->ppa.g.pg].data;
+			sector_oob = blk->pages[cmd->ppa.g.pg].data + volt_mmgr.geometry->pg_size;
+			decode_ret = decode_bch(bch,sector_data,K_SIZE,sector_oob,NULL,NULL,errloc);
 			
 			if(decode_ret< 0){
 				ret = 1;
