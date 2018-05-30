@@ -30,7 +30,6 @@ static const char *volt_disk = "volt_disk";
 
 static struct bch_control *bch; 
 static unsigned int errloc[BCH_T];
-static int decode_ret=0;
 
 static int volt_start_prp_map(void)
 {
@@ -474,7 +473,7 @@ static int volt_process_io (struct nvm_mmgr_io_cmd *cmd)
                 sector_data[10] = ~sector_data[10];
             }
             //memset(errloc,0,BCH_T*sizeof(int));
-			decode_ret = decode_bch(bch,sector_data,K_SIZE,sector_oob,NULL,NULL,errloc);
+			int decode_ret = decode_bch(bch,sector_data,K_SIZE,sector_oob,NULL,NULL,errloc);
 			if(core.debug){
                 printf("[DEBUG] decode_ret: %d.\n",decode_ret);
             }
@@ -962,6 +961,7 @@ int mmgr_volt_init(void)
     volt_mmgr.ops      = &volt_ops;
     volt_mmgr.geometry = &volt_geo;
     bch = init_bch(BCH_M, BCH_T, 0);
+	memset(errloc,0,BCH_T*sizeof(int));
     ret = volt_init();
     if(ret) {
         log_err(" [volt: Not possible to start VOLT.]\n");
