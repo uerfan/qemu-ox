@@ -212,6 +212,9 @@ enum {
     NVM_IO_PROCESS     = 0x3,
     NVM_IO_NEW         = 0x4,
     NVM_IO_TIMEOUT     = 0x5,
+
+	//added by lf
+    NVM_IO_ECC_ERROR   = 0x6,
 };
 
 enum RUN_FLAGS {

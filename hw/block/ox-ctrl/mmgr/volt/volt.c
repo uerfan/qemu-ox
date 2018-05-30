@@ -6,6 +6,16 @@
 #include "hw/block/ox-ctrl/include/uatomic.h"
 #include "hw/block/ox-ctrl/include/ssd.h"
 #include "hw/block/ox-ctrl/include/ox-mq.h"
+#include "bch.h"
+
+#define BCH_T 4
+#define BCH_M 15
+#define SECTOR_SZ 2048
+#define OOB_SZ 8
+#define SECTORS_PER_PAGE 8
+#define OOB_ECC_OFS 0
+#define OOB_ECC_LEN 8
+
 
 static u_atomic_t       nextprp[VOLT_CHIP_COUNT];
 static pthread_mutex_t  prpmap_mutex[VOLT_CHIP_COUNT];
@@ -423,28 +433,54 @@ static int volt_process_io (struct nvm_mmgr_io_cmd *cmd)
     VoltBlock *blk;
     uint8_t dir;
     struct volt_dma *dma = (struct volt_dma *) cmd->rsvd;
+	struct bch_control *bch = init_bch(BCH_M, BCH_T, 0);
     uint32_t pg_size = volt_mmgr.geometry->pg_size +
             (volt_mmgr.geometry->sec_oob_sz * volt_mmgr.geometry->sec_per_pg);
-    int pg_i;
-
+    int pg_i,i;
+	int ret = 0;
     blk = volt_get_block(cmd->ppa);
-
-    dir = VOLT_DMA_WRITE;
-
+	
+   
     switch (cmd->cmdtype) {
         case MMGR_READ_PG:
             dir = VOLT_DMA_READ;
-			
+			volt_nand_dma (blk->pages[cmd->ppa.g.pg].data,dma->virt_addr, pg_size-SECTOR_SZ * SECTORS_PER_PAGE, dir);
+
+			unsigned int errloc[BCH_T];
+			int decode_ret=0;
+			const uint8_t *sector_data = blk->pages[cmd->ppa.g.pg].data;
+			uint8_t *sector_oob = blk->pages[cmd->ppa.g.pg].data + SECTOR_SZ * SECTORS_PER_PAGE;
+			for (i = 0; i != SECTORS_PER_PAGE; ++i){
+				decode_ret=decode_bch(bch,sector_data+SECTOR_SZ*i,SECTOR_SZ,sector_oob+OOB_SIZE*i,NULL,NULL,errloc);
+				if(decode_ret< 0){
+					ret = 1;
+					dma->status = 1;
+					goto THIS_RET;
+				}
+				if(decode_ret> 0 && decode_ret<BCH_T){
+					int j=0;
+					for(j=0; j<decode_ret; j++){
+						(sector_data+SECTOR_SZ*i)[errloc[j]/8] ^= 1 << (errloc[j] % 8);
+					}
+				}
+			}
+			break;
         case MMGR_WRITE_PG:
-            volt_nand_dma (blk->pages[cmd->ppa.g.pg].data,
-                                                dma->virt_addr, pg_size, dir);
+			dir = VOLT_DMA_WRITE;
+			const uint8_t *sector_data = blk->pages[cmd->ppa.g.pg].data;
+			uint8_t *sector_oob = dma->virt_addr + SECTOR_SZ * SECTORS_PER_PAGE;
+			for (i = 0; i != SECTORS_PER_PAGE; ++i){
+				encode_bch(bch, sector_data+SECTOR_SZ*i, SECTOR_SZ, sector_oob+OOB_SIZE*i);
+			}
+            volt_nand_dma (blk->pages[cmd->ppa.g.pg].data,dma->virt_addr, pg_size-SECTOR_SZ * SECTORS_PER_PAGE, dir);
 			break;
         case MMGR_ERASE_BLK:
             if (blk->life > 0) {
                 blk->life--;
             } else {
                 dma->status = 0;
-                return -1;
+				ret = -1;
+				goto THIS_RET;
             }
             for (pg_i = 0; pg_i < volt_mmgr.geometry->pg_per_blk; pg_i++)
                 memset(blk->pages[pg_i].data, 0xff, pg_size);
@@ -453,17 +489,20 @@ static int volt_process_io (struct nvm_mmgr_io_cmd *cmd)
             break;
         default:
             dma->status = 0;
-            return -1;
+            ret = -1;
+			goto THIS_RET;
     }
     dma->status = 1;
-
+THIS_RET:
+	free_bch(bch);
+	return ret;
     /* DEBUG: Force timeout for testing */
     /*
     if (cmd->ppa.g.pg > 28 && cmd->ppa.g.pg < 31)
         usleep (100000);
     */
 
-    return 0;
+   // return 0;
 }
 
 static void volt_execute_io (struct ox_mq_entry *req)
