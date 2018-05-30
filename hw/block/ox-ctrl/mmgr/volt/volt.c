@@ -458,13 +458,14 @@ static int volt_process_io (struct nvm_mmgr_io_cmd *cmd)
 			sector_data = (uint8_t*)(dma->virt_addr);
 			sector_oob = sector_data + volt_mmgr.geometry->pg_size;
             if(core.debug){
+                printf("[DEBUG] sizeof sector_data[10] = %d \n",sizeof(sector_data[10]));
                 sector_data[10] = ~sector_data[10];
             }
 			decode_ret = decode_bch(bch,sector_data,K_SIZE,sector_oob,NULL,NULL,errloc);
 			if(core.debug){
                 printf("[DEBUG] decode_ret: %d.\n",decode_ret);
             }
-			if(decode_ret< 0){
+			if(decode_ret < 0){
 				ret = 1;
 				dma->status = 1;
 				goto THIS_RET;
