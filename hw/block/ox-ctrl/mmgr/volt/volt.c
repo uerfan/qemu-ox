@@ -456,7 +456,7 @@ static int volt_process_io (struct nvm_mmgr_io_cmd *cmd)
 
 		#ifdef USE_ECC
 			sector_data = (uint8_t*)(dma->virt_addr);
-			sector_oob = sector_data + volt_mmgr.geometry->sec_sz;
+			sector_oob = sector_data + volt_mmgr.geometry->sec_size;
             if(core.debug){
                 //printf("[DEBUG] sizeof sector_data[10] = %ld \n",sizeof(sector_data[10]));
                 sector_data[10] = (sector_data[10] & 0xF0) | ((~(sector_data[10] & 0x0F)) & 0x0F);
@@ -484,7 +484,7 @@ static int volt_process_io (struct nvm_mmgr_io_cmd *cmd)
 
 		#ifdef USE_ECC
 			sector_data = (uint8_t*)(blk->pages[cmd->ppa.g.pg].data);
-			sector_oob = sector_data + volt_mmgr.geometry->sec_sz;
+			sector_oob = sector_data + volt_mmgr.geometry->sec_size;
             encode_bch(bch, sector_data, K_SIZE, sector_oob);
             if(core.debug){
                 printf("[DEBUG] encode_bch.\n");
