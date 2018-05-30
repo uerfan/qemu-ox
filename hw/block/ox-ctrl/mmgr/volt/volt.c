@@ -469,9 +469,9 @@ static int volt_process_io (struct nvm_mmgr_io_cmd *cmd)
                 goto THIS_RET;
             }
             sector_oob = sector_data + volt_mmgr.geometry->pg_size;
-            if(core.debug){
+            //if(core.debug){
                 sector_data[10] = ~sector_data[10];
-            }
+            //}
             //memset(errloc,0,BCH_T*sizeof(int));
 			int decode_ret = decode_bch(bch,sector_data,K_SIZE,sector_oob,NULL,NULL,errloc);
 			if(core.debug){
