@@ -82,6 +82,8 @@ int decode_bch(struct bch_control *bch, const uint8_t *data, unsigned int len,
 	       const uint8_t *recv_ecc, const uint8_t *calc_ecc,
 	       const unsigned int *syn, unsigned int *errloc);
 
+unsigned fls(uint32_t x);
+
 #ifdef __cplusplus
 }
 #endif
