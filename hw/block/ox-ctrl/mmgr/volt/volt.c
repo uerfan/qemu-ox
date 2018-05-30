@@ -440,9 +440,10 @@ static int volt_process_io (struct nvm_mmgr_io_cmd *cmd)
     blk = volt_get_block(cmd->ppa);
 	
 	struct bch_control *bch = init_bch(BCH_M, BCH_T, 0);
-	uint8_t *sector_data;
+#ifdef USE_ECC
+    uint8_t *sector_data;
     uint8_t *sector_oob;
-	
+#endif	
     switch (cmd->cmdtype) {
         case MMGR_READ_PG:
             dir = VOLT_DMA_READ;
