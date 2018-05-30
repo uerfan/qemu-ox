@@ -442,18 +442,18 @@ static int volt_process_io (struct nvm_mmgr_io_cmd *cmd)
     blk = volt_get_block(cmd->ppa);
 	
 	struct bch_control *bch = init_bch(BCH_M, BCH_T, 0);
-	uint8_t *sector_data = blk->pages[cmd->ppa.g.pg].data;
+	uint8_t *sector_data = dma->virt_addr;
     uint8_t *sector_oob;
 	
     switch (cmd->cmdtype) {
         case MMGR_READ_PG:
             dir = VOLT_DMA_READ;
-			volt_nand_dma (blk->pages[cmd->ppa.g.pg].data,dma->virt_addr, pg_size-SECTOR_SZ * SECTORS_PER_PAGE, dir);
+			volt_nand_dma (blk->pages[cmd->ppa.g.pg].data,dma->virt_addr, pg_size, dir);
 
 		#ifdef USE_ECC
 			unsigned int errloc[BCH_T];
 			int decode_ret=0;
-			sector_oob= blk->pages[cmd->ppa.g.pg].data + SECTOR_SZ * SECTORS_PER_PAGE;
+			sector_oob= dma->virt_addr + SECTOR_SZ * SECTORS_PER_PAGE;
 			for (i = 0; i != SECTORS_PER_PAGE; ++i){
 				decode_ret=decode_bch(bch,sector_data+SECTOR_SZ*i,SECTOR_SZ,sector_oob+OOB_SZ*i,NULL,NULL,errloc);
 				if(decode_ret< 0){
@@ -474,7 +474,7 @@ static int volt_process_io (struct nvm_mmgr_io_cmd *cmd)
         case MMGR_WRITE_PG:
 			dir = VOLT_DMA_WRITE;
 		#ifdef USE_ECC
-			sector_oob = dma->virt_addr + SECTOR_SZ * SECTORS_PER_PAGE;
+			sector_oob = blk->pages[cmd->ppa.g.pg].data + SECTOR_SZ * SECTORS_PER_PAGE;
 			for (i = 0; i != SECTORS_PER_PAGE; ++i){
 				encode_bch(bch, sector_data+SECTOR_SZ*i, SECTOR_SZ, sector_oob+OOB_SZ*i);
 			}
