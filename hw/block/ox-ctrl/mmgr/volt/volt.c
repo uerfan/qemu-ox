@@ -439,11 +439,13 @@ static int volt_process_io (struct nvm_mmgr_io_cmd *cmd)
 	int ret = 0;
     blk = volt_get_block(cmd->ppa);
 	
-	struct bch_control *bch = init_bch(BCH_M, BCH_T, 0);
+	
 #ifdef USE_ECC
+    struct bch_control *bch = init_bch(BCH_M, BCH_T, 0);
     uint8_t *sector_data;
     uint8_t *sector_oob;
 #endif	
+    
     switch (cmd->cmdtype) {
         case MMGR_READ_PG:
             dir = VOLT_DMA_READ;
@@ -468,7 +470,7 @@ static int volt_process_io (struct nvm_mmgr_io_cmd *cmd)
 					sector_data[errloc[j]/8] ^= 1 << (errloc[j] % 8);
 			}
 	   #endif
-	   
+
 			break;
         case MMGR_WRITE_PG:
 			dir = VOLT_DMA_WRITE;
@@ -499,7 +501,9 @@ static int volt_process_io (struct nvm_mmgr_io_cmd *cmd)
     }
     dma->status = 1;
 THIS_RET:
+#ifdef USE_ECC
 	free_bch(bch);
+#endif
 	return ret;
     /* DEBUG: Force timeout for testing */
     /*
