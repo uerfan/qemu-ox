@@ -12,11 +12,12 @@
 #define VOLT_CHIP_COUNT      8
 #define VOLT_VIRTUAL_LUNS    4
 #define VOLT_BLOCK_COUNT     64
-#define VOLT_PAGE_COUNT      64
+//#define VOLT_PAGE_COUNT      64
+#define VOLT_PAGE_COUNT      256
 #define VOLT_SECTOR_COUNT    4
 #define VOLT_PLANE_COUNT     2
-#define VOLT_PAGE_SIZE       0x4000
-#define VOLT_SECTOR_SIZE     0x1000
+#define VOLT_PAGE_SIZE       0x1000
+#define VOLT_SECTOR_SIZE     0x400
 #define VOLT_OOB_SIZE        0x40
 
 #define VOLT_DMA_SLOT_CH     32
