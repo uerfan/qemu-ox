@@ -28,7 +28,9 @@ extern struct core_struct   core;
 
 static const char *volt_disk = "volt_disk";
 
-struct bch_control *bch; 
+static struct bch_control *bch; 
+static unsigned int errloc[BCH_T];
+static int decode_ret=0;
 
 static int volt_start_prp_map(void)
 {
@@ -454,8 +456,6 @@ static int volt_process_io (struct nvm_mmgr_io_cmd *cmd)
 
 		#ifdef USE_ECC
 			sector_data = dma->virt_addr;
-			unsigned int errloc[BCH_T];
-			int decode_ret=0;
 			sector_oob= dma->virt_addr + volt_mmgr.geometry->pg_size;
 			decode_ret=decode_bch(bch,sector_data,K_SIZE,sector_oob,NULL,NULL,errloc);
 			
