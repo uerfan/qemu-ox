@@ -11,13 +11,11 @@
 #define USE_ECC 0
 
 
-#define BCH_T 4
-#define BCH_M 15
-#define SECTOR_SZ 2048
-#define OOB_SZ 8
-#define SECTORS_PER_PAGE 8
+#define BCH_T 16
+#define BCH_M 13
+#define K_SIZE 512 
 #define OOB_ECC_OFS 0
-#define OOB_ECC_LEN 8
+#define OOB_ECC_LEN 26
 
 static u_atomic_t       nextprp[VOLT_CHIP_COUNT];
 static pthread_mutex_t  prpmap_mutex[VOLT_CHIP_COUNT];
