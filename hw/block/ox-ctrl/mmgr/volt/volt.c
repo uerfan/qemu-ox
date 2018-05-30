@@ -479,15 +479,18 @@ static int volt_process_io (struct nvm_mmgr_io_cmd *cmd)
 			break;
         case MMGR_WRITE_PG:
 			dir = VOLT_DMA_WRITE;
+            volt_nand_dma (blk->pages[cmd->ppa.g.pg].data,dma->virt_addr, volt_mmgr.geometry->pg_size, dir);
+            
 		#ifdef USE_ECC
-			sector_data = dma->virt_addr;
+			sector_data = blk->pages[cmd->ppa.g.pg].data;
 			sector_oob = blk->pages[cmd->ppa.g.pg].data+volt_mmgr.geometry->pg_size;
+            memset(sector_oob,0,OOB_ECC_LEN);
 			encode_bch(bch, sector_data, K_SIZE, sector_oob);
             if(core.debug){
                 printf("[DEBUG]encode_bch.\n");
             }
 		#endif
-            volt_nand_dma (blk->pages[cmd->ppa.g.pg].data,dma->virt_addr, volt_mmgr.geometry->pg_size, dir);
+            
 			break;
         case MMGR_ERASE_BLK:
             if (blk->life > 0) {
