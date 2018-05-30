@@ -458,7 +458,7 @@ static int volt_process_io (struct nvm_mmgr_io_cmd *cmd)
 			sector_data = (uint8_t*)(dma->virt_addr);
 			
             int i;
-            int is_erased = 0;
+            int is_erased = 1;
             for (i = 0; i != volt_mmgr.geometry->pg_size; ++i){
                 if (sector_data[i] != 0xff)
                 {
