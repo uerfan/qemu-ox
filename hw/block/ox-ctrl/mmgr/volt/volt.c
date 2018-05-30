@@ -460,7 +460,7 @@ static int volt_process_io (struct nvm_mmgr_io_cmd *cmd)
             int i;
             int is_erased = 0;
             for (i = 0; i != volt_mmgr.geometry->pg_size; ++i){
-                if (page_buffer[i] != 0xff)
+                if (sector_data[i] != 0xff)
                 {
                     is_erased = 0;
                     break;
