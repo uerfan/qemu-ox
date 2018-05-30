@@ -405,7 +405,7 @@ static void volt_nand_dma (void *paddr, void *buf, size_t sz, uint8_t dir)
 {
     switch (dir) {
         case VOLT_DMA_READ:
-			if(core.debug){
+			/*if(core.debug){
 				printf("[DEBUG]: read size=%ld \n",sz);
 				int i=0;
 				//printf("[DEBUG]: read data %s \n",(char*)paddr);
@@ -413,12 +413,12 @@ static void volt_nand_dma (void *paddr, void *buf, size_t sz, uint8_t dir)
 				for(i=VOLT_PAGE_SIZE; i<VOLT_PAGE_SIZE+OOB_ECC_LEN;i++)
 					printf(" 0x%0x",(unsigned char)(*((char*)paddr+i)));
 				printf("\n");
-			}
+			}*/
 			
             memcpy(buf, paddr, sz);
             break;
         case VOLT_DMA_WRITE:
-			if(core.debug){
+			/*if(core.debug){
 				printf("[DEBUG]: write size=%ld \n",sz);
 				int i=0;
 				//printf("[DEBUG]: write data %s \n",(char*)buf);
@@ -426,7 +426,7 @@ static void volt_nand_dma (void *paddr, void *buf, size_t sz, uint8_t dir)
 				for(i=VOLT_PAGE_SIZE; i<VOLT_PAGE_SIZE+OOB_ECC_LEN;i++)
 					printf(" 0x%0x",(unsigned char)(*((char*)buf+i)));
 				printf("\n");
-			}
+			}*/
             memcpy(paddr, buf, sz);
             break;
     }
@@ -457,8 +457,13 @@ static int volt_process_io (struct nvm_mmgr_io_cmd *cmd)
 		#ifdef USE_ECC
 			sector_data = dma->virt_addr;
 			sector_oob = dma->virt_addr + volt_mmgr.geometry->pg_size;
+            if(core.debug){
+                sector_data[10] = ~sector_data[10];
+            }
 			decode_ret = decode_bch(bch,sector_data,K_SIZE,sector_oob,sector_oob,NULL,errloc);
-			
+			if(core.debug){
+                printf("[DEBUG]decode_ret: %d.\n",decode_ret);
+            }
 			if(decode_ret< 0){
 				ret = 1;
 				dma->status = 1;
@@ -478,6 +483,9 @@ static int volt_process_io (struct nvm_mmgr_io_cmd *cmd)
 			sector_data = dma->virt_addr;
 			sector_oob = blk->pages[cmd->ppa.g.pg].data+volt_mmgr.geometry->pg_size;
 			encode_bch(bch, sector_data, K_SIZE, sector_oob);
+            if(core.debug){
+                printf("[DEBUG]encode_bch.\n");
+            }
 		#endif
             volt_nand_dma (blk->pages[cmd->ppa.g.pg].data,dma->virt_addr, volt_mmgr.geometry->pg_size, dir);
 			break;
