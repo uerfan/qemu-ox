@@ -426,6 +426,8 @@ static void volt_nand_dma (void *paddr, void *buf, size_t sz, uint8_t dir)
 					printf(" 0x%0x",(unsigned char)(*((char*)buf+i)));
 				printf("\n");
 			}*/
+			printf("[DEBUG]: write size=%ld \n",sz);
+			printf("[DEBUG]: write data %.*s \n",sz>10:10?sz,(char*)buf);
             memcpy(paddr, buf, sz);
             break;
     }
@@ -540,6 +542,15 @@ static void volt_execute_io (struct ox_mq_entry *req)
     struct nvm_mmgr_io_cmd *cmd = (struct nvm_mmgr_io_cmd *) req->opaque;
     int ret, retry;
 
+	if(core.debug){
+		switch(cmd->cmdtype){
+			case MMGR_READ_PG:
+				printf("[DEBUG] MMGR_WRITE_PG\n");
+				break;
+			case MMGR_WRITE_PG:
+				printf("[DEBUG] MMGR_READ_PG\n")
+		}
+	}
     ret = volt_process_io(cmd);
 	if(core.debug)
 		printf("[DEBUG] volt_execute_io ret=%d \n",ret);
