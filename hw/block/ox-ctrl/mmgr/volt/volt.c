@@ -545,19 +545,7 @@ static void volt_execute_io (struct ox_mq_entry *req)
     struct nvm_mmgr_io_cmd *cmd = (struct nvm_mmgr_io_cmd *) req->opaque;
     int ret, retry;
 
-	if(core.debug){
-		switch(cmd->cmdtype){
-			case MMGR_READ_PG:
-				printf("[DEBUG] MMGR_READ_PG\n");
-				break;
-			case MMGR_WRITE_PG:
-				printf("[DEBUG] MMGR_WRITING_PG\n");
-				break;
-		}
-	}
     ret = volt_process_io(cmd);
-	if(core.debug)
-		printf("[DEBUG] volt_execute_io ret=%d \n",ret);
 	
     if (ret && core.debug) {
         log_err ("[volt: Cmd 0x%x NOT completed. (%d/%d/%d/%d/%d)]\n",

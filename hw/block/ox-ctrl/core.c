@@ -454,7 +454,6 @@ int nvm_submit_ftl (struct nvm_io_cmd *cmd)
             usleep (NVM_QUEUE_RETRY_SLEEP);
         }
         else if (core.debug) {
-			printf("[DEBUG] retry:%d \n",retry);
             printf(" CMD cid: %lu, type: 0x%x submitted to FTL. "
                                "FTL queue: %d\n", cmd->cid, cmd->cmdtype, qid);
             if (core.lnvm) {
@@ -506,8 +505,7 @@ int nvm_submit_mmgr (struct nvm_mmgr_io_cmd *cmd)
 {
     gettimeofday(&cmd->tstart,NULL);
     cmd->cmdtype = cmd->nvm_io->cmdtype;
-	if(core.debug)
-    	printf("[DEBUG] nvm_submit_mmgr type:%d \n",cmd->cmdtype);
+
     switch (cmd->nvm_io->cmdtype) {
         case MMGR_WRITE_PG:
             return cmd->ch->mmgr->ops->write_pg(cmd);
