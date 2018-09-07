@@ -428,7 +428,7 @@ static void volt_nand_dma (void *paddr, void *buf, size_t sz, uint8_t dir)
 				printf("\n");
 			}*/
 			printf("[DEBUG]: write size=%ld \n",sz);
-			printf("[DEBUG]: write data: %s \n",(char*)buf);
+			//printf("[DEBUG]: write data: %s \n",(char*)buf);
             memcpy(paddr, buf, sz);
             break;
     }
