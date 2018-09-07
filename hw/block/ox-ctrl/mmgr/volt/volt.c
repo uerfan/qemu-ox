@@ -8,7 +8,7 @@
 #include "hw/block/ox-ctrl/include/ox-mq.h"
 #include "bch.h"
 
-#define USE_ECC
+//#define USE_ECC
 
 
 #define BCH_T 16
