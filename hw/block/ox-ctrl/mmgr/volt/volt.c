@@ -548,10 +548,10 @@ static void volt_execute_io (struct ox_mq_entry *req)
 	if(core.debug){
 		switch(cmd->cmdtype){
 			case MMGR_READ_PG:
-				printf("[DEBUG] MMGR_WRITE_PG\n");
+				printf("[DEBUG] MMGR_READ_PG\n");
 				break;
 			case MMGR_WRITE_PG:
-				printf("[DEBUG] MMGR_READ_PG\n");
+				printf("[DEBUG] MMGR_WRITING_PG\n");
 				break;
 		}
 	}
