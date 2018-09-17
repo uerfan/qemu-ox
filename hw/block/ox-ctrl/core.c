@@ -349,10 +349,15 @@ void nvm_callback (struct nvm_mmgr_io_cmd *cmd)
     if (core.debug)
         nvm_debug_print_mmgr_io (cmd);
 
-    if (cmd->status != NVM_IO_SUCCESS)
+    if (cmd->status != NVM_IO_SUCCESS){
         log_err (" [FAILED 0x%x CMD. mmgr_ch: %d, lun: %d, blk: %d, pl: %d, "
                 "pg: %d]\n", cmd->cmdtype, cmd->ppa.g.ch, cmd->ppa.g.lun,
                 cmd->ppa.g.blk, cmd->ppa.g.pl, cmd->ppa.g.pg);
+		printf(" [FAILED 0x%x CMD. mmgr_ch: %d, lun: %d, blk: %d, pl: %d, "
+                "pg: %d]\n", cmd->cmdtype, cmd->ppa.g.ch, cmd->ppa.g.lun,
+                cmd->ppa.g.blk, cmd->ppa.g.pl, cmd->ppa.g.pg);
+	}
+		
 
     if (cmd->sync_count) {
         pthread_mutex_lock(cmd->sync_mutex);
