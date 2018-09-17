@@ -251,7 +251,7 @@ static int lnvm_submit_io (struct nvm_io_cmd *cmd)
                 case MMGR_WRITE_PG:
                     ret = lnvm_pg_write(&cmd->mmgr_io[i]);
 					if((&cmd->mmgr_io[i])->status == NVM_IO_ECC_ERROR)
-						printf("DEBUG NVM_IO_ECC_ERROR\n")
+						printf("DEBUG NVM_IO_ECC_ERROR\n");
                     break;
                 case MMGR_READ_PG:
                     ret = lnvm_pg_read(&cmd->mmgr_io[i]);
