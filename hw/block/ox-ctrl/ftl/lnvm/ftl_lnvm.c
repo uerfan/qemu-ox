@@ -244,6 +244,7 @@ static int lnvm_submit_io (struct nvm_io_cmd *cmd)
         }
     }
 
+	printf("[DEBUG]:ftl_lnvm IO checking!\n");
     for (i = 0; i < cmd->status.total_pgs; i++) {
         /* if true, page not processed yet */
         if ( cmd->status.pg_map[i / 8] & (1 << (i % 8)) ) {
