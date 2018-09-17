@@ -531,7 +531,8 @@ static int volt_process_io (struct nvm_mmgr_io_cmd *cmd)
             ret = -1;
 			goto THIS_RET;
     }
-    dma->status = 1;
+   // dma->status = 1;
+	dma->status = 0;
 THIS_RET:
 	return ret;
     /* DEBUG: Force timeout for testing */
@@ -558,8 +559,8 @@ static void volt_execute_io (struct ox_mq_entry *req)
         goto COMPLETE;
     }
 
-    //cmd->status = NVM_IO_SUCCESS;
-	cmd->status = NVM_IO_ECC_ERROR;
+    cmd->status = NVM_IO_SUCCESS;
+	//cmd->status = NVM_IO_ECC_ERROR;
 
 COMPLETE:
     retry = NVM_QUEUE_RETRY;
