@@ -405,7 +405,7 @@ OUT:
 
 static void volt_nand_dma (void *paddr, void *buf, size_t sz, uint8_t dir)
 {
-	printf("[DEBUG]:Entering volt_nand_dma %ld\n",sz); 
+	//printf("[DEBUG]:Entering volt_nand_dma %ld\n",sz); 
     switch (dir) {
         case VOLT_DMA_READ:
 			/*if(core.debug){
@@ -430,13 +430,13 @@ static void volt_nand_dma (void *paddr, void *buf, size_t sz, uint8_t dir)
 					printf(" 0x%0x",(unsigned char)(*((char*)buf+i)));
 				printf("\n");
 			}*/
-			printf("[DEBUG]: write size=%ld \n",sz);
+			//printf("[DEBUG]: write size=%ld \n",sz);
 			//printf("[DEBUG]: write data: %s \n",(char*)buf);
             memcpy(paddr, buf, sz);
             break;
     }
 
-	printf("[DEBUG]:Leaving volt_nand_dma %ld\n",sz); 
+	//printf("[DEBUG]:Leaving volt_nand_dma %ld\n",sz); 
 }
 
 static int volt_process_io (struct nvm_mmgr_io_cmd *cmd)
