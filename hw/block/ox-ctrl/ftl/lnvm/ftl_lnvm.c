@@ -119,7 +119,7 @@ static void lnvm_callback_io (struct nvm_mmgr_io_cmd *cmd)
         pthread_mutex_lock(&endio_mutex);
         cmd->nvm_io->status.pgs_s++;
     } else {
-		if(cmd.status == NVM_IO_ECC_ERROR)
+		if(cmd->status == NVM_IO_ECC_ERROR)
 			printf("DEBUG NVM_IO_ECC_ERROR\n");
         pthread_mutex_lock(&endio_mutex);
         cmd->nvm_io->status.pg_errors++;
