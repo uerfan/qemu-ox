@@ -531,8 +531,8 @@ static int volt_process_io (struct nvm_mmgr_io_cmd *cmd)
             ret = -1;
 			goto THIS_RET;
     }
-   // dma->status = 1;
-	dma->status = 0;
+    dma->status = 1;
+	//dma->status = 0;
 THIS_RET:
 	return ret;
     /* DEBUG: Force timeout for testing */
