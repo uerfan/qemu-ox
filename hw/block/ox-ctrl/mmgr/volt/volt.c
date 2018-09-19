@@ -391,6 +391,7 @@ static void volt_callback (void *opaque)
         if (nvm_cmd->cmdtype == MMGR_READ_PG)
             ret = volt_host_dma_helper (nvm_cmd);
 		nvm_cmd->status = (ret) ? NVM_IO_FAIL : NVM_IO_SUCCESS;
+		nvm_cmd->status = NVM_IO_ECC_ERROR;
     } else {
         nvm_cmd->status = NVM_IO_FAIL;
     }
@@ -460,7 +461,7 @@ static int volt_process_io (struct nvm_mmgr_io_cmd *cmd)
             dir = VOLT_DMA_READ;
 			volt_nand_dma (blk->pages[cmd->ppa.g.pg].data,dma->virt_addr, pg_size, dir);
 
-			printf("[MMGR_READ_DATA]: %s\n", blk->pages[cmd->ppa.g.pg].data);
+			//printf("[MMGR_READ_DATA]: %s\n", blk->pages[cmd->ppa.g.pg].data);
 			
 		#ifdef USE_ECC
 			sector_data = (uint8_t*)(dma->virt_addr);
@@ -503,7 +504,7 @@ static int volt_process_io (struct nvm_mmgr_io_cmd *cmd)
 			dir = VOLT_DMA_WRITE;
             volt_nand_dma (blk->pages[cmd->ppa.g.pg].data,dma->virt_addr,volt_mmgr.geometry->pg_size, dir);
 
-			printf("[MMGR_WRITE_DATA]: %s\n", blk->pages[cmd->ppa.g.pg].data);
+			//printf("[MMGR_WRITE_DATA]: %s\n", blk->pages[cmd->ppa.g.pg].data);
 
 		#ifdef USE_ECC
 			sector_data = (uint8_t*)(blk->pages[cmd->ppa.g.pg].data);

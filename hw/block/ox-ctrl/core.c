@@ -484,6 +484,9 @@ FTL_ERR:
     return NVME_INVALID_FIELD;
 }
 
+/**
+ nvme host data transfering
+**/
 int nvm_dma (void *ptr, uint64_t prp, ssize_t size, uint8_t direction)
 {
     if (!size || !prp)
