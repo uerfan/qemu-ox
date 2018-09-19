@@ -391,7 +391,6 @@ static void volt_callback (void *opaque)
         if (nvm_cmd->cmdtype == MMGR_READ_PG)
             ret = volt_host_dma_helper (nvm_cmd);
 		nvm_cmd->status = (ret) ? NVM_IO_FAIL : NVM_IO_SUCCESS;
-		nvm_cmd->status = NVM_IO_ECC_ERROR;
     } else {
         nvm_cmd->status = NVM_IO_FAIL;
     }
