@@ -840,12 +840,12 @@ uint16_t nvme_admin_cmd (NvmeCtrl *n, NvmeCmd *cmd, NvmeRequest *req)
             return NVME_INVALID_OPCODE | NVME_DNR;
 
         /* Near-data processing */
-        case NDP_ADM_CMD_INFO:
+       /* case NDP_ADM_CMD_INFO:
             return NVME_SUCCESS;
         case NDP_ADM_CMD_INST_DAEM:
             return NVME_SUCCESS;
         case NDP_ADM_CMD_DEL_DAEM:
-            return NVME_SUCCESS;
+            return NVME_SUCCESS;*/
 
         case LNVM_ADM_CMD_IDENTITY:
             return lnvm_identity(n, cmd);
