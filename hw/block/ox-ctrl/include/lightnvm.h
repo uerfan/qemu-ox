@@ -50,6 +50,8 @@
 #define LNVM_LBA_UNMAPPED UINT64_MAX
 
 enum LnvmAdminCommands {
+	LNVM_ADM_CMD_SET_ECC_OFF 			= 0xd0,
+	LNVM_ADM_CMD_SET_ECC_ON 			= 0xd1,
     LNVM_ADM_CMD_IDENTITY           = 0xe2,
     LNVM_ADM_CMD_GET_L2P_TBL        = 0xea,
     LNVM_ADM_CMD_GET_BB_TBL         = 0xf2,

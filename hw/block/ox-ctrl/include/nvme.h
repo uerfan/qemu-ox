@@ -1130,6 +1130,9 @@ uint16_t lnvm_get_l2p_tbl(NvmeCtrl *, NvmeCmd *, NvmeRequest *);
 uint16_t lnvm_get_bb_tbl(NvmeCtrl *, NvmeCmd *, NvmeRequest *);
 uint16_t lnvm_set_bb_tbl(NvmeCtrl *, NvmeCmd *, NvmeRequest *);
 
+int lnvm_set_ecc_on();
+int lnvm_set_ecc_off();
+
 /* LNVM IO cmd */
 uint16_t lnvm_erase_sync(NvmeCtrl *, NvmeNamespace *, NvmeCmd *, NvmeRequest *);
 uint16_t lnvm_rw(NvmeCtrl *, NvmeNamespace *, NvmeCmd *, NvmeRequest *);

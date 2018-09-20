@@ -179,6 +179,13 @@ struct NvmeCtrl;
 struct NvmeRequest;
 union NvmeRegs;
 
+static int ECC_CTL;
+
+enum{
+	MMGR_ECC_OFF = 0x0,
+	MMGR_ECC_ON = 0x1
+};
+
 enum {
     NVM_DMA_TO_HOST        = 0x0,
     NVM_DMA_FROM_HOST      = 0x1,

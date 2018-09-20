@@ -63,6 +63,18 @@ static void lnvm_tbl_initialize(uint64_t *tbl, uint32_t len)
         tbl[i] = LNVM_LBA_UNMAPPED;
 }
 
+int lnvm_set_ecc_on(){
+	ECC_CTL = MMGR_ECC_ON;
+	printf("MMGR_ECC_ON: ECC_CTL = %d\n",ECC_CTL);
+	return NVME_SUCCESS;
+}
+
+int lnvm_set_ecc_off(){
+	ECC_CTL = MMGR_ECC_OFF;
+	printf("MMGR_ECC_OFF: ECC_CTL = %d\n",ECC_CTL);
+	return NVME_SUCCESS;
+}
+
 uint16_t lnvm_get_l2p_tbl(NvmeCtrl *n, NvmeCmd *cmd, NvmeRequest *req)
 {
     LnvmGetL2PTbl *gtbl = (LnvmGetL2PTbl*)cmd;

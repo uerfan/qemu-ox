@@ -450,10 +450,7 @@ static int volt_process_io (struct nvm_mmgr_io_cmd *cmd)
     blk = volt_get_block(cmd->ppa);
 	
 	
-#ifdef USE_ECC
-    uint8_t *sector_data;
-    uint8_t *sector_oob;
-#endif	
+
 
     switch (cmd->cmdtype) {
         case MMGR_READ_PG:
@@ -461,43 +458,41 @@ static int volt_process_io (struct nvm_mmgr_io_cmd *cmd)
 			volt_nand_dma (blk->pages[cmd->ppa.g.pg].data,dma->virt_addr, pg_size, dir);
 
 			//printf("[MMGR_READ_DATA]: %s\n", blk->pages[cmd->ppa.g.pg].data);
-			
-		#ifdef USE_ECC
-			sector_data = (uint8_t*)(dma->virt_addr);
-            int i,is_erased = 1;
-            for (i = 0; i != K_SIZE; ++i){
-                if (sector_data[i] != 0xff)
-                {
-                    is_erased = 0;
-                    break;
-                }
-            }
-            if(is_erased){
-                ret = 1;
-                dma->status = 1;
-                goto THIS_RET;
-            }
-            sector_oob = sector_data + volt_mmgr.geometry->pg_size;
-            //if(core.debug){
-                sector_data[10] = ~sector_data[10];
-            //}
-            //memset(errloc,0,BCH_T*sizeof(int));
-			int decode_ret = decode_bch(bch,sector_data,K_SIZE,sector_oob,NULL,NULL,errloc);
-			if(core.debug){
-                printf("[DEBUG] decode_ret: %d.\n",decode_ret);
-            }
-			if(decode_ret < 0){
-				ret = 1;
-				dma->status = 1;
-				goto THIS_RET;
-			}
-			if(decode_ret> 0 && decode_ret<BCH_T){
-                int j=0;
-				for(j=0; j<decode_ret; j++)
-					sector_data[errloc[j]/8] ^= 1 << (errloc[j] % 8);
-			}
-	   #endif
-
+			if(ECC_CTL){
+				
+				uint8_t *sector_data;
+				uint8_t *sector_oob;
+				sector_data = (uint8_t*)(dma->virt_addr);
+            	int i,is_erased = 1;
+            	for (i = 0; i != K_SIZE; ++i){
+                	if (sector_data[i] != 0xff)
+                	{
+                    	is_erased = 0;
+                    	break;
+                	}
+            	}
+            	if(is_erased){
+                	ret = 1;
+                	dma->status = 1;
+                	goto THIS_RET;
+            	}
+            	sector_oob = sector_data + volt_mmgr.geometry->pg_size;
+			    //memset(errloc,0,BCH_T*sizeof(int));
+				int decode_ret = decode_bch(bch,sector_data,K_SIZE,sector_oob,NULL,NULL,errloc);
+				if(core.debug){
+                	printf("[DEBUG] decode_ret: %d.\n",decode_ret);
+            	}
+				if(decode_ret < 0){
+					ret = 1;
+					dma->status = 1;
+					goto THIS_RET;
+				}
+				if(decode_ret> 0 && decode_ret<BCH_T){
+                	int j=0;
+					for(j=0; j<decode_ret; j++)
+						sector_data[errloc[j]/8] ^= 1 << (errloc[j] % 8);
+				}
+	   		}
 			break;
         case MMGR_WRITE_PG:
 			dir = VOLT_DMA_WRITE;
@@ -505,15 +500,17 @@ static int volt_process_io (struct nvm_mmgr_io_cmd *cmd)
 
 			//printf("[MMGR_WRITE_DATA]: %s\n", blk->pages[cmd->ppa.g.pg].data);
 
-		#ifdef USE_ECC
-			sector_data = (uint8_t*)(blk->pages[cmd->ppa.g.pg].data);
-			sector_oob = sector_data + volt_mmgr.geometry->pg_size;
-            memset(sector_oob,0,OOB_ECC_LEN);
-            encode_bch(bch, sector_data, K_SIZE, sector_oob);
-            if(core.debug){
-                printf("[DEBUG] encode_bch.\n");
-            }
-		#endif
+			if(ECC_CTL){
+				uint8_t *sector_data;
+				uint8_t *sector_oob;
+				sector_data = (uint8_t*)(blk->pages[cmd->ppa.g.pg].data);
+				sector_oob = sector_data + volt_mmgr.geometry->pg_size;
+           	 	memset(sector_oob,0,OOB_ECC_LEN);
+            	encode_bch(bch, sector_data, K_SIZE, sector_oob);
+            	if(core.debug){
+                	printf("[DEBUG] encode_bch.\n");
+            	}
+			}
             
 			break;
         case MMGR_ERASE_BLK:
@@ -972,6 +969,7 @@ int mmgr_volt_init(void)
     volt_mmgr.ops      = &volt_ops;
     volt_mmgr.geometry = &volt_geo;
     bch = init_bch(BCH_M, BCH_T, 0);
+	ECC_CTL = MMGR_ECC_OFF;
 	memset(errloc,0,BCH_T*sizeof(int));
     ret = volt_init();
     if(ret) {

@@ -849,6 +849,12 @@ uint16_t nvme_admin_cmd (NvmeCtrl *n, NvmeCmd *cmd, NvmeRequest *req)
 
         case LNVM_ADM_CMD_IDENTITY:
             return lnvm_identity(n, cmd);
+		case LNVM_ADM_CMD_SET_ECC_OFF:
+			return lnvm_set_ecc_off();
+			
+		case LNVM_ADM_CMD_SET_ECC_ON:
+			return lnvm_set_ecc_on();
+			
         case LNVM_ADM_CMD_GET_L2P_TBL:
             return lnvm_get_l2p_tbl(n, cmd, req);
         case LNVM_ADM_CMD_GET_BB_TBL:
