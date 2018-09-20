@@ -12,6 +12,6 @@
 #ifndef CTL_H
 #define CTL_H
 
-static int ECC_CTL;
+extern int ECC_CTL;
 
 #endif /* CTL_H */

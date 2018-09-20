@@ -32,6 +32,8 @@ static const char *volt_disk = "volt_disk";
 static struct bch_control *bch; 
 static unsigned int errloc[BCH_T];
 
+static int ECC_CTL;
+
 static int volt_start_prp_map(void)
 {
     int i;
