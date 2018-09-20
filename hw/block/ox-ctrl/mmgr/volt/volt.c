@@ -449,9 +449,6 @@ static int volt_process_io (struct nvm_mmgr_io_cmd *cmd)
     int pg_i;
 	int ret = 0;
     blk = volt_get_block(cmd->ppa);
-	
-	
-
 
     switch (cmd->cmdtype) {
         case MMGR_READ_PG:
@@ -460,7 +457,6 @@ static int volt_process_io (struct nvm_mmgr_io_cmd *cmd)
 
 			//printf("[MMGR_READ_DATA]: %s\n", blk->pages[cmd->ppa.g.pg].data);
 			if(ECC_CTL){
-				
 				uint8_t *sector_data;
 				uint8_t *sector_oob;
 				sector_data = (uint8_t*)(dma->virt_addr);
@@ -485,7 +481,7 @@ static int volt_process_io (struct nvm_mmgr_io_cmd *cmd)
             	}
 				if(decode_ret < 0){
 					ret = 1;
-					dma->status = 1;
+					dma->status = 0;
 					goto THIS_RET;
 				}
 				if(decode_ret> 0 && decode_ret<BCH_T){
@@ -512,7 +508,6 @@ static int volt_process_io (struct nvm_mmgr_io_cmd *cmd)
                 	printf("[DEBUG] encode_bch.\n");
             	}
 			}
-            
 			break;
         case MMGR_ERASE_BLK:
             if (blk->life > 0) {
