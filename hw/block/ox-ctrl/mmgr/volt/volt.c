@@ -5,6 +5,7 @@
 #include "volt.h"
 #include "hw/block/ox-ctrl/include/uatomic.h"
 #include "hw/block/ox-ctrl/include/ssd.h"
+#include "hw/block/ox-ctrl/include/ctl.h"
 #include "hw/block/ox-ctrl/include/ox-mq.h"
 #include "bch.h"
 
