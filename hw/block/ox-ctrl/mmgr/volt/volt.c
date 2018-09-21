@@ -451,12 +451,13 @@ static int volt_process_io (struct nvm_mmgr_io_cmd *cmd)
     int pg_i;
 	int ret = 0;
     blk = volt_get_block(cmd->ppa);
+	dma->status = 1;
 
     switch (cmd->cmdtype) {
         case MMGR_READ_PG:
             dir = VOLT_DMA_READ;
 			volt_nand_dma (blk->pages[cmd->ppa.g.pg].data,dma->virt_addr, pg_size, dir);
-			dma->status = 1;
+			
 
 			printf("[DEBUG][MMGR_WRITE_ECC_CTL]: %d\n",ECC_CTL);
 			if(ECC_CTL==MMGR_ECC_ON){
@@ -509,7 +510,6 @@ static int volt_process_io (struct nvm_mmgr_io_cmd *cmd)
         case MMGR_WRITE_PG:
 			dir = VOLT_DMA_WRITE;
             volt_nand_dma (blk->pages[cmd->ppa.g.pg].data,dma->virt_addr,volt_mmgr.geometry->pg_size, dir);
-			dma->status = 1;
 
 			//printf("[MMGR_WRITE_DATA]: %s\n", blk->pages[cmd->ppa.g.pg].data);
 			printf("[DEBUG][MMGR_READ_ECC_CTL]: %d\n",ECC_CTL);
