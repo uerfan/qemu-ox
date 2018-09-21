@@ -456,6 +456,7 @@ static int volt_process_io (struct nvm_mmgr_io_cmd *cmd)
         case MMGR_READ_PG:
             dir = VOLT_DMA_READ;
 			volt_nand_dma (blk->pages[cmd->ppa.g.pg].data,dma->virt_addr, pg_size, dir);
+			dma->status = 1;
 
 			printf("[DEBUG][MMGR_WRITE_ECC_CTL]: %d\n",ECC_CTL);
 			if(ECC_CTL==MMGR_ECC_ON){
@@ -493,7 +494,7 @@ static int volt_process_io (struct nvm_mmgr_io_cmd *cmd)
 				if(decode_ret < 0){
 					ret = 1;
 					dma->status = 0;
-					goto THIS_RET;
+					//goto THIS_RET;
 				}
 				if(decode_ret> 0 && decode_ret<BCH_T){
                 	int j=0;
@@ -508,6 +509,7 @@ static int volt_process_io (struct nvm_mmgr_io_cmd *cmd)
         case MMGR_WRITE_PG:
 			dir = VOLT_DMA_WRITE;
             volt_nand_dma (blk->pages[cmd->ppa.g.pg].data,dma->virt_addr,volt_mmgr.geometry->pg_size, dir);
+			dma->status = 1;
 
 			//printf("[MMGR_WRITE_DATA]: %s\n", blk->pages[cmd->ppa.g.pg].data);
 			printf("[DEBUG][MMGR_READ_ECC_CTL]: %d\n",ECC_CTL);
@@ -552,7 +554,7 @@ static int volt_process_io (struct nvm_mmgr_io_cmd *cmd)
             ret = -1;
 			goto THIS_RET;
     }
-    dma->status = 1;
+    //dma->status = 1;
 	//dma->status = 0;
 THIS_RET:
 	return ret;
