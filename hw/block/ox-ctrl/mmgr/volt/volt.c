@@ -16,7 +16,7 @@
 #define BCH_M 14
 #define K_SIZE 1024 
 #define OOB_ECC_OFS 0
-#define OOB_ECC_LEN 26
+#define OOB_ECC_LEN 56
 
 static u_atomic_t       nextprp[VOLT_CHIP_COUNT];
 static pthread_mutex_t  prpmap_mutex[VOLT_CHIP_COUNT];
