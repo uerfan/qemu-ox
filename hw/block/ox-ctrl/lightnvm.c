@@ -63,13 +63,13 @@ static void lnvm_tbl_initialize(uint64_t *tbl, uint32_t len)
         tbl[i] = LNVM_LBA_UNMAPPED;
 }
 
-int lnvm_set_ecc_on(){
+int lnvm_set_ecc_on(void){
 	ECC_CTL = MMGR_ECC_ON;
 	printf("MMGR_ECC_ON: ECC_CTL = %d\n",ECC_CTL);
 	return NVME_SUCCESS;
 }
 
-int lnvm_set_ecc_off(){
+int lnvm_set_ecc_off(void){
 	ECC_CTL = MMGR_ECC_OFF;
 	printf("MMGR_ECC_OFF: ECC_CTL = %d\n",ECC_CTL);
 	return NVME_SUCCESS;
