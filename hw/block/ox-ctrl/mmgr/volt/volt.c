@@ -509,7 +509,7 @@ static int volt_process_io (struct nvm_mmgr_io_cmd *cmd)
 			break;
         case MMGR_WRITE_PG:
 			dir = VOLT_DMA_WRITE;
-            volt_nand_dma (blk->pages[cmd->ppa.g.pg].data,dma->virt_addr,volt_mmgr.geometry->pg_size, dir);
+            volt_nand_dma (blk->pages[cmd->ppa.g.pg].data,dma->virt_addr,pg_size, dir);
 
 			//printf("[MMGR_WRITE_DATA]: %s\n", blk->pages[cmd->ppa.g.pg].data);
 			printf("[DEBUG][MMGR_READ_ECC_CTL]: %d\n",ECC_CTL);
