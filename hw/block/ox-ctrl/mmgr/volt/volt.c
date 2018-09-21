@@ -452,6 +452,8 @@ static int volt_process_io (struct nvm_mmgr_io_cmd *cmd)
 	int ret = 0;
     blk = volt_get_block(cmd->ppa);
 	dma->status = 1;
+	
+	printf("[DEBUG][volt process io]: vlot_page_sz:%d,vlot_oob_sz:%d,sec_per_page: %d\n",volt_mmgr.geometry->pg_size,volt_mmgr.geometry->sec_oob_sz,volt_mmgr.geometry->sec_per_pg);
 
     switch (cmd->cmdtype) {
         case MMGR_READ_PG:
@@ -509,7 +511,7 @@ static int volt_process_io (struct nvm_mmgr_io_cmd *cmd)
 			break;
         case MMGR_WRITE_PG:
 			dir = VOLT_DMA_WRITE;
-            volt_nand_dma (blk->pages[cmd->ppa.g.pg].data,dma->virt_addr,pg_size, dir);
+            //volt_nand_dma (blk->pages[cmd->ppa.g.pg].data,dma->virt_addr,pg_size, dir);
 
 			//printf("[MMGR_WRITE_DATA]: %s\n", blk->pages[cmd->ppa.g.pg].data);
 			printf("[DEBUG][MMGR_READ_ECC_CTL]: %d\n",ECC_CTL);
@@ -519,7 +521,7 @@ static int volt_process_io (struct nvm_mmgr_io_cmd *cmd)
 				uint8_t *sector_oob,*sector_oob_start;
 				int offs=0;
 				
-				sector_data_start = (uint8_t*)(blk->pages[cmd->ppa.g.pg].data);
+				sector_data_start = (uint8_t*)(dma->virt_addr);
 				sector_oob_start = sector_data_start + volt_mmgr.geometry->pg_size;
 
 				for(offs=0; offs<volt_mmgr.geometry->pg_size/K_SIZE;offs++){
@@ -535,6 +537,8 @@ static int volt_process_io (struct nvm_mmgr_io_cmd *cmd)
 
 				}
 			}
+
+			volt_nand_dma (blk->pages[cmd->ppa.g.pg].data,dma->virt_addr,pg_size, dir);
 			break;
         case MMGR_ERASE_BLK:
             if (blk->life > 0) {
