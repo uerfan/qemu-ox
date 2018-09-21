@@ -459,9 +459,18 @@ static int volt_process_io (struct nvm_mmgr_io_cmd *cmd)
 
 			printf("[DEBUG][MMGR_WRITE_ECC_CTL]: %d\n",ECC_CTL);
 			if(ECC_CTL==MMGR_ECC_ON){
-				uint8_t *sector_data;
-				uint8_t *sector_oob;
-				sector_data = (uint8_t*)(dma->virt_addr);
+				uint8_t *sector_data,*sector_data_start;
+				uint8_t *sector_oob,*sector_oob_start;
+				int offs=0;
+
+				sector_data_start = (uint8_t*)(dma->virt_addr);
+				sector_oob_start = sector_data + volt_mmgr.geometry->pg_size;
+
+				for(offs=0; offs<volt_mmgr.geometry->pg_size/K_SIZE;offs++){
+				
+				sector_data = sector_data_start + offs*K_SIZE;
+				sector_oob = sector_oob_start + offs*OOB_ECC_LEN; 
+				
             	int i,is_erased = 1;
             	for (i = 0; i != K_SIZE; ++i){
                 	if (sector_data[i] != 0xff)
@@ -475,7 +484,7 @@ static int volt_process_io (struct nvm_mmgr_io_cmd *cmd)
                 	dma->status = 1;
                 	goto THIS_RET;
             	}
-            	sector_oob = sector_data + volt_mmgr.geometry->pg_size;
+            	
 			    //memset(errloc,0,BCH_T*sizeof(int));
 				int decode_ret = decode_bch(bch,sector_data,K_SIZE,sector_oob,NULL,NULL,errloc);
 				if(core.debug){
@@ -491,6 +500,9 @@ static int volt_process_io (struct nvm_mmgr_io_cmd *cmd)
 					for(j=0; j<decode_ret; j++)
 						sector_data[errloc[j]/8] ^= 1 << (errloc[j] % 8);
 				}
+				
+				
+				}
 	   		}
 			break;
         case MMGR_WRITE_PG:
@@ -500,15 +512,26 @@ static int volt_process_io (struct nvm_mmgr_io_cmd *cmd)
 			//printf("[MMGR_WRITE_DATA]: %s\n", blk->pages[cmd->ppa.g.pg].data);
 			printf("[DEBUG][MMGR_READ_ECC_CTL]: %d\n",ECC_CTL);
 			if(ECC_CTL==MMGR_ECC_ON){
-				uint8_t *sector_data;
-				uint8_t *sector_oob;
-				sector_data = (uint8_t*)(blk->pages[cmd->ppa.g.pg].data);
-				sector_oob = sector_data + volt_mmgr.geometry->pg_size;
-           	 	memset(sector_oob,0,OOB_ECC_LEN);
+
+				uint8_t *sector_data,*sector_data_start;
+				uint8_t *sector_oob,*sector_oob_start;
+				int offs=0;
+				
+				sector_data_start = (uint8_t*)(blk->pages[cmd->ppa.g.pg].data);
+				sector_oob_start = sector_data + volt_mmgr.geometry->pg_size;
+
+				for(offs=0; offs<volt_mmgr.geometry->pg_size/K_SIZE;offs++){
+
+				sector_data = sector_data_start + offs*K_SIZE;
+				sector_oob = sector_oob_start + offs*OOB_ECC_LEN; 
+				
+				memset(sector_oob,0,OOB_ECC_LEN);
             	encode_bch(bch, sector_data, K_SIZE, sector_oob);
             	if(core.debug){
                 	printf("[DEBUG] encode_bch.\n");
             	}
+
+				}
 			}
 			break;
         case MMGR_ERASE_BLK:
