@@ -499,7 +499,7 @@ static int volt_process_io (struct nvm_mmgr_io_cmd *cmd)
 					dma->status = 0;
 					//goto THIS_RET;
 				}
-				if(decode_ret> 0 && decode_ret<BCH_T){
+				if(decode_ret> 0 && decode_ret<=BCH_T){
                 	int j=0;
 					for(j=0; j<decode_ret; j++)
 						sector_data[errloc[j]/8] ^= 1 << (errloc[j] % 8);
