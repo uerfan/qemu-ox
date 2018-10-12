@@ -470,7 +470,7 @@ static int volt_process_io (struct nvm_mmgr_io_cmd *cmd)
 				sector_data_start = (uint8_t*)(dma->virt_addr);
 				sector_oob_start = sector_data_start + volt_mmgr.geometry->pg_size;
 
-				for(offs=0; offs<1;offs++){
+				for(offs=0; offs<volt_mmgr.geometry->pg_size/K_SIZE;offs++){
 				
 				sector_data = sector_data_start + offs*K_SIZE;
 				sector_oob = sector_oob_start + offs*OOB_ECC_LEN; 
@@ -524,7 +524,7 @@ static int volt_process_io (struct nvm_mmgr_io_cmd *cmd)
 				sector_data_start = (uint8_t*)(blk->pages[cmd->ppa.g.pg].data);
 				sector_oob_start = sector_data_start + volt_mmgr.geometry->pg_size;
 
-				for(offs=0; offs<1;offs++){
+				for(offs=0; offs<volt_mmgr.geometry->pg_size/K_SIZE;offs++){
 
 				sector_data = sector_data_start + offs*K_SIZE;
 				sector_oob = sector_oob_start + offs*OOB_ECC_LEN; 
