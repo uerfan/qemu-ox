@@ -460,8 +460,9 @@ static int volt_process_io (struct nvm_mmgr_io_cmd *cmd)
             dir = VOLT_DMA_READ;
 			volt_nand_dma (blk->pages[cmd->ppa.g.pg].data,dma->virt_addr, pg_size, dir);
 			
-
-			printf("[DEBUG][MMGR_WRITE_ECC_CTL]: %d\n",ECC_CTL);
+			if(core.debug){
+				printf("[DEBUG][MMGR_WRITE_ECC_CTL]: %d\n",ECC_CTL);
+			}
 			if(ECC_CTL==MMGR_ECC_ON){
 				uint8_t *sector_data,*sector_data_start;
 				uint8_t *sector_oob,*sector_oob_start;
@@ -514,7 +515,10 @@ static int volt_process_io (struct nvm_mmgr_io_cmd *cmd)
             volt_nand_dma (blk->pages[cmd->ppa.g.pg].data,dma->virt_addr,volt_mmgr.geometry->pg_size, dir);
 
 			//printf("[MMGR_WRITE_DATA]: %s\n", blk->pages[cmd->ppa.g.pg].data);
-			printf("[DEBUG][MMGR_READ_ECC_CTL]: %d\n",ECC_CTL);
+			if(core.debug){
+				printf("[DEBUG][MMGR_READ_ECC_CTL]: %d\n",ECC_CTL);
+			}
+			
 			if(ECC_CTL==MMGR_ECC_ON){
 
 				uint8_t *sector_data,*sector_data_start;
