@@ -453,7 +453,7 @@ static int volt_process_io (struct nvm_mmgr_io_cmd *cmd)
 	int ret = 0;
     blk = volt_get_block(cmd->ppa);
 	dma->status = 1;
-	int rate=20;
+	int rate=10;
 	
 	//printf("[DEBUG][volt process io]: vlot_page_sz:%d,vlot_oob_sz:%d,sec_per_page: %d\n",volt_mmgr.geometry->pg_size,volt_mmgr.geometry->sec_oob_sz,volt_mmgr.geometry->sec_per_pg);
 
