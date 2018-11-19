@@ -458,7 +458,7 @@ static int volt_process_io (struct nvm_mmgr_io_cmd *cmd)
     switch (cmd->cmdtype) {
         case MMGR_READ_PG:
             dir = VOLT_DMA_READ;
-			volt_nand_dma (blk->pages[cmd->ppa.g.pg].data,dma->virt_addr, pg_size, dir);
+			
 			
 			if(core.debug){
 				printf("[DEBUG][MMGR_WRITE_ECC_CTL]: %d\n",ECC_CTL);
@@ -510,11 +510,13 @@ static int volt_process_io (struct nvm_mmgr_io_cmd *cmd)
 				}*/
 				ret = 1;
 				dma->status = 0;
+				break;
 	   		}
+			volt_nand_dma (blk->pages[cmd->ppa.g.pg].data,dma->virt_addr, pg_size, dir);
 			break;
         case MMGR_WRITE_PG:
 			dir = VOLT_DMA_WRITE;
-            volt_nand_dma (blk->pages[cmd->ppa.g.pg].data,dma->virt_addr,volt_mmgr.geometry->pg_size, dir);
+            //volt_nand_dma (blk->pages[cmd->ppa.g.pg].data,dma->virt_addr,volt_mmgr.geometry->pg_size, dir);
 
 			//printf("[MMGR_WRITE_DATA]: %s\n", blk->pages[cmd->ppa.g.pg].data);
 			/*if(core.debug){
@@ -544,7 +546,7 @@ static int volt_process_io (struct nvm_mmgr_io_cmd *cmd)
 				}
 			}*/
 
-			//volt_nand_dma (blk->pages[cmd->ppa.g.pg].data,dma->virt_addr,pg_size, dir);
+			volt_nand_dma (blk->pages[cmd->ppa.g.pg].data,dma->virt_addr,pg_size, dir);
 			break;
         case MMGR_ERASE_BLK:
             if (blk->life > 0) {
