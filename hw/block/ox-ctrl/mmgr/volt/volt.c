@@ -466,7 +466,7 @@ static int volt_process_io (struct nvm_mmgr_io_cmd *cmd)
 				printf("[DEBUG][MMGR_READ_ECC_CTL]: %d\n",ECC_CTL);
 			}
 			int posi = (int)(100*rand()/(RAND_MAX+1.0))
-			if(ECC_CTL==MMGR_ECC_ON && (rand()%100 < rate)){
+			if(ECC_CTL==MMGR_ECC_ON && (posi < rate)){
 				ret = 1;
 				dma->status = 0;
 				break;				
