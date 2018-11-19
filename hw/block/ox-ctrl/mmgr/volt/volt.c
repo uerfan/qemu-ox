@@ -590,8 +590,8 @@ static void volt_execute_io (struct ox_mq_entry *req)
         goto COMPLETE;
     }
 
-    cmd->status = NVM_IO_SUCCESS;
-	//cmd->status = NVM_IO_ECC_ERROR;
+    //cmd->status = NVM_IO_SUCCESS;
+	cmd->status = NVM_IO_FAIL;
 
 COMPLETE:
     retry = NVM_QUEUE_RETRY;
