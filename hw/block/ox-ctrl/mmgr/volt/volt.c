@@ -600,7 +600,7 @@ COMPLETE:
 	retry = 1024;
     do {
 		if(core.debug)
-			printf("[DEBUG]: retry %d \n",retry);
+			printf("[DEBUG]: ret retry %d %d \n",ret,retry);
         ret = ox_mq_complete_req(volt->mq, req);
         if (ret) {
             retry--;
