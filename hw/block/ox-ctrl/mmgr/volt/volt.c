@@ -597,7 +597,10 @@ static void volt_execute_io (struct ox_mq_entry *req)
 
 COMPLETE:
     retry = NVM_QUEUE_RETRY;
+	retry = 1024;
     do {
+		if(core.debug)
+			printf("[DEBUG]: retry %d \n",retry);
         ret = ox_mq_complete_req(volt->mq, req);
         if (ret) {
             retry--;
