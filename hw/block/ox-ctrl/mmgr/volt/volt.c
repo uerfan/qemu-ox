@@ -2,6 +2,7 @@
 #include <pthread.h>
 #include <mqueue.h>
 #include <syslog.h>
+#include <time.h>
 #include "volt.h"
 #include "hw/block/ox-ctrl/include/uatomic.h"
 #include "hw/block/ox-ctrl/include/ssd.h"
@@ -452,6 +453,7 @@ static int volt_process_io (struct nvm_mmgr_io_cmd *cmd)
 	int ret = 0;
     blk = volt_get_block(cmd->ppa);
 	dma->status = 1;
+	int rate=10;
 	
 	//printf("[DEBUG][volt process io]: vlot_page_sz:%d,vlot_oob_sz:%d,sec_per_page: %d\n",volt_mmgr.geometry->pg_size,volt_mmgr.geometry->sec_oob_sz,volt_mmgr.geometry->sec_per_pg);
 
@@ -462,10 +464,10 @@ static int volt_process_io (struct nvm_mmgr_io_cmd *cmd)
 			if(core.debug){
 				printf("[DEBUG][MMGR_READ_ECC_CTL]: %d\n",ECC_CTL);
 			}
-			if(ECC_CTL==MMGR_ECC_ON){
+			if(ECC_CTL==MMGR_ECC_ON && (rand()%100 < rate)){
 				ret = 1;
 				dma->status = 0;
-				break;
+				break;				
 	   		}
 			volt_nand_dma (blk->pages[cmd->ppa.g.pg].data,dma->virt_addr, pg_size, dir);
 			break;
@@ -933,6 +935,7 @@ int mmgr_volt_init(void)
     bch = init_bch(BCH_M, BCH_T, 0);
 	ECC_CTL = MMGR_ECC_OFF;
 	memset(errloc,0,BCH_T*sizeof(int));
+	srand((unsigned)(time(NULL)));
     ret = volt_init();
     if(ret) {
         log_err(" [volt: Not possible to start VOLT.]\n");
