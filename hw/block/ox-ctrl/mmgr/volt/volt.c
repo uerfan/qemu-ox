@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <pthread.h>
 #include <mqueue.h>
 #include <syslog.h>
@@ -453,7 +454,8 @@ static int volt_process_io (struct nvm_mmgr_io_cmd *cmd)
 	int ret = 0;
     blk = volt_get_block(cmd->ppa);
 	dma->status = 1;
-	int rate=0;
+	int rate=10;
+	int posi = 0;
 	
 	//printf("[DEBUG][volt process io]: vlot_page_sz:%d,vlot_oob_sz:%d,sec_per_page: %d\n",volt_mmgr.geometry->pg_size,volt_mmgr.geometry->sec_oob_sz,volt_mmgr.geometry->sec_per_pg);
 
@@ -464,6 +466,7 @@ static int volt_process_io (struct nvm_mmgr_io_cmd *cmd)
 			if(core.debug){
 				printf("[DEBUG][MMGR_READ_ECC_CTL]: %d\n",ECC_CTL);
 			}
+			posi=(int)(100*rand()/(RAND_MAX+1.0))
 			if(ECC_CTL==MMGR_ECC_ON && (rand()%100 < rate)){
 				ret = 1;
 				dma->status = 0;
