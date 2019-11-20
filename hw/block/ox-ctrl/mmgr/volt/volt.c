@@ -631,6 +631,7 @@ CLEAN:
     return -1;
 }
 
+
 static int volt_erase_blk (struct nvm_mmgr_io_cmd *cmd)
 {
     if(volt_enqueue_io (cmd))
